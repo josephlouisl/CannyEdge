@@ -32,7 +32,6 @@ async def main(loop):
                 canny_img_path = await wait_for_done(result_future)
 
 
-
 if __name__ == "__main__":
     loop = asyncio.get_event_loop()
     loop.run_until_complete(main(loop))

@@ -1,5 +1,6 @@
 import aiobotocore
 import aio_pika
+import asyncio
 
 import settings
 
@@ -59,6 +60,6 @@ async def rabbit_pub(loop, queue, body):
 
 
 async def wait_for_done(result):
-    while not result.ready():
+    while result.ready():
         await asyncio.sleep(0.25)
     return result.get()

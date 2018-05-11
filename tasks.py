@@ -6,7 +6,7 @@ from PIL import Image
 import settings
 
 
-app = Celery('tasks', broker='pyamqp://guest@localhost//')
+app = Celery('tasks', broker='pyamqp://guest@localhost//', backend='rpc://')
 
 
 @app.task

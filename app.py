@@ -16,15 +16,13 @@ async def handle(request):
             }
         serialized_data = json.dumps(aws_data)
         await rabbit_pub(app.loop, settings.PRECESS_IMG_QUEUE, serialized_data)
-
     except KeyError:
         pass
-    return web.Response(text="OK")
+    return web.Response(text="OK \n")
 
 
 app = web.Application()
-app.add_routes([web.post('/', handle),
-                web.post('/{name}', handle)])
+app.add_routes([web.post('/', handle),])
 
 
 web.run_app(app, port=8000)
