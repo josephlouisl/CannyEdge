@@ -30,6 +30,9 @@ async def main(loop):
                 file_path = await aws_client.get_file(**data)
                 result_future = canny_task.delay(file_path)
                 canny_img_path = await wait_for_done(result_future)
+                data['file_path'] = canny_img_path
+                data['key'] = canny_img_path.split('/')[-1]
+                resp = await aws_client.upload_huge(**data)
 
 
 if __name__ == "__main__":
