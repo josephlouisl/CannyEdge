@@ -1,5 +1,4 @@
 #!/bin/bash
-python app.py
 if [ $APP == "celery_worker" ]
 	then
 	celery -A tasks worker --loglevel=info

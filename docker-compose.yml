@@ -1,0 +1,42 @@
+version: "2.1"
+services:
+    rabbit:
+        hostname: rabbit
+        image: rabbitmq:latest
+        volumes:
+            - /postresql:/var/lib/postgresql
+        healthcheck:
+            test: "exit 0"
+
+    celery:
+        image: josephlouisl/CannyEdge
+        volumes:
+            - ./media:/etc/chessonline/media
+        depends_on:
+            rabbit:
+                condition: service_healthy
+        environment:
+            - APP=celery_worker
+
+
+    task_server:
+        restart: always
+        image: josephlouisl/CannyEdge
+        volumes:
+            - ./media:/etc/chessonline/media
+        depends_on:
+            rabbit:
+                condition: service_healthy
+        environment:
+            - APP=task_server
+
+    api_server:
+        restart: always
+        image: josephlouisl/CannyEdge
+        ports:
+            - "8001:8000"
+        depends_on:
+            rabbit:
+                condition: service_healthy
+        environment:
+            - APP=api_server
