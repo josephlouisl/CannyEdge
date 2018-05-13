@@ -1,3 +1,5 @@
+import os
+
 import aiobotocore
 import aio_pika
 import asyncio
@@ -89,7 +91,7 @@ class AWSWrapper:
 
 async def rabbit_pub(loop, queue, body):
     connection = await aio_pika.connect_robust(
-        "amqp://guest:guest@127.0.0.1/", loop=loop)
+        settings.RABBITMQ_HOST, loop=loop)
 
     async with connection:
         routing_key = queue
@@ -106,3 +108,10 @@ async def wait_for_done(result):
     while result.ready():
         await asyncio.sleep(0.25)
     return result.get()
+
+
+def delete_file(file_path):
+    try:
+        os.remove(file_path)
+    except OSError:
+        pass

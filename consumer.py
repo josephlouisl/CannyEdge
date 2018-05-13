@@ -1,15 +1,16 @@
-import asyncio
-import aio_pika
 import json
 
+import asyncio
+import aio_pika
+
 import settings
-from utils import AWSWrapper, wait_for_done
+from utils import AWSWrapper, wait_for_done, delete_file
 from tasks import canny_task
 
 
 async def main(loop):
     connection = await aio_pika.connect_robust(
-        "amqp://guest:guest@127.0.0.1/", loop=loop
+        settings.RABBITMQ_HOST, loop=loop
     )
 
     queue_name = settings.PRECESS_IMG_QUEUE
@@ -30,9 +31,11 @@ async def main(loop):
                 file_path = await aws_client.get_file(**data)
                 result_future = canny_task.delay(file_path)
                 canny_img_path = await wait_for_done(result_future)
+                delete_file(file_path)
                 data['file_path'] = canny_img_path
                 data['key'] = canny_img_path.split('/')[-1]
                 resp = await aws_client.upload_huge(**data)
+                delete_file(canny_img_path)
 
 
 if __name__ == "__main__":
