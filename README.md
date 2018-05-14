@@ -7,6 +7,9 @@
 ```
 pip install -r requirements.txt
 ```
+[Instal rabbit](https://www.digitalocean.com/community/tutorials/how-to-install-and-manage-rabbitmq)
+
+Configurate settings.py
 #### Run
 
 ```
