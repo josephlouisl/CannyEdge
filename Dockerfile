@@ -10,10 +10,10 @@ RUN apt-get update && \
 	libboost-all-dev &&\
 	rm -rf /var/lib/apt/lists/*
 
-RUN mkdir -p /etc/chessonline
-WORKDIR /etc/chessonline
+RUN mkdir -p /etc/canny_edge_app
+WORKDIR /etc/canny_edge_app
 COPY . .
 RUN bash build.sh
-ADD start.sh /etc/chessonline/
+ADD start.sh /etc/canny_edge_app/
 EXPOSE 8000
 CMD ["bash", "start.sh"]

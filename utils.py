@@ -1,10 +1,13 @@
 import os
+from uuid import uuid4
 
 import aiobotocore
 import aio_pika
+import aiomcache
 import asyncio
 
 import settings
+
 
 class AWSWrapper:
     def __init__(self):
@@ -87,6 +90,21 @@ class AWSWrapper:
             if not data:
                 break
             yield data
+
+
+class Task:
+    def __init__(self, loop, id=None):
+        self.mc = aiomcache.Client(settings.MC['HOST'], settings.MC['PORT'], loop=loop)
+        if not id:
+            id = str(uuid4())
+        self.id = id
+
+    async def get_status(self):
+        status = await self.mc.get(self.id.encode())
+        return status.decode('utf-8')
+
+    async def set_status(self, status):
+        await self.mc.set(self.id.encode(), status.encode())
 
 
 async def rabbit_pub(loop, queue, body):

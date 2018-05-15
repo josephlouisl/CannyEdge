@@ -9,9 +9,9 @@ services:
             test: "exit 0"
 
     celery:
-        image: josephlouisl/CannyEdge
+        image: josephlouisl/cannyedge
         volumes:
-            - ./media:/etc/chessonline/media
+            - ./media:/etc/canny_edge_app/media
         depends_on:
             rabbit:
                 condition: service_healthy
@@ -21,9 +21,9 @@ services:
 
     task_server:
         restart: always
-        image: josephlouisl/CannyEdge
+        image: josephlouisl/cannyedge
         volumes:
-            - ./media:/etc/chessonline/media
+            - ./media:/etc/canny_edge_app/media
         depends_on:
             rabbit:
                 condition: service_healthy
@@ -32,7 +32,7 @@ services:
 
     api_server:
         restart: always
-        image: josephlouisl/CannyEdge
+        image: josephlouisl/cannyedge
         ports:
             - "8001:8000"
         depends_on:
@@ -40,3 +40,8 @@ services:
                 condition: service_healthy
         environment:
             - APP=api_server
+
+    memcached:
+        restart: always
+        image: memcached
+        
